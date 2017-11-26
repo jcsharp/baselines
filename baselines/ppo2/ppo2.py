@@ -221,14 +221,14 @@ def learn(*, policy, env, nsteps, total_timesteps, ent_coef, lr,
         fps = int(nbatch / (tnow - tstart))
         if update % log_interval == 0 or update == 1:
             ev = explained_variance(values, returns)
-            logger.logkv("serial_timesteps", update*nsteps)
-            logger.logkv("nupdates", update)
-            logger.logkv("total_timesteps", update*nbatch)
+            #logger.logkv("serial_timesteps", update*nsteps)
+            #logger.logkv("nupdates", update)
+            #logger.logkv("total_timesteps", update*nbatch)
             logger.logkv("fps", fps)
             logger.logkv("explained_variance", float(ev))
             logger.logkv('eprewmean', safemean([epinfo['r'] for epinfo in epinfobuf]))
             logger.logkv('eplenmean', safemean([epinfo['l'] for epinfo in epinfobuf]))
-            logger.logkv('time_elapsed', tnow - tfirststart)
+            #logger.logkv('time_elapsed', tnow - tfirststart)
             for (lossval, lossname) in zip(lossvals, model.loss_names):
                 logger.logkv(lossname, lossval)
             logger.dumpkvs()
