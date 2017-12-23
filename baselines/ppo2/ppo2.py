@@ -165,6 +165,7 @@ def learn(*, policy, env, nsteps, total_timesteps, ent_coef, lr,
     ob_space = env.observation_space
     ac_space = env.action_space
     nbatch = nenvs * nsteps
+    assert nbatch % nminibatches == 0
     nbatch_train = nbatch // nminibatches
 
     make_model = lambda : Model(policy=policy, ob_space=ob_space, ac_space=ac_space, nbatch_act=nenvs, nbatch_train=nbatch_train, 
@@ -186,7 +187,6 @@ def learn(*, policy, env, nsteps, total_timesteps, ent_coef, lr,
 
     nupdates = total_timesteps//nbatch
     for update in range(1, nupdates+1):
-        assert nbatch % nminibatches == 0
         nbatch_train = nbatch // nminibatches
         tstart = time.time()
         frac = 1.0 - (update - 1.0) / nupdates
