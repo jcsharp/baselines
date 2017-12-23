@@ -172,17 +172,17 @@ def learn(*, policy, env, nsteps, total_timesteps, ent_coef, lr,
                     max_grad_norm=max_grad_norm)
     model = make_model()
     if save_interval and logger.get_dir():
+        checkdir = osp.join(logger.get_dir(), 'checkpoints')
+        os.makedirs(checkdir, exist_ok=True)
         tf.train.export_meta_graph(osp.join(logger.get_dir(), 'model.meta'))
         import cloudpickle
         with open(osp.join(logger.get_dir(), 'make_model.pkl'), 'wb') as fh:
             fh.write(cloudpickle.dumps(make_model))
+    
     runner = Runner(env=env, model=model, nsteps=nsteps, gamma=gamma, lam=lam)
 
     epinfobuf = deque(maxlen=100)
     tfirststart = time.time()
-
-    checkdir = osp.join(logger.get_dir(), 'checkpoints')
-    os.makedirs(checkdir, exist_ok=True)
 
     nupdates = total_timesteps//nbatch
     for update in range(1, nupdates+1):
