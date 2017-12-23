@@ -187,7 +187,6 @@ def learn(*, policy, env, nsteps, total_timesteps, ent_coef, lr,
 
     nupdates = total_timesteps//nbatch
     for update in range(1, nupdates+1):
-        nbatch_train = nbatch // nminibatches
         tstart = time.time()
         frac = 1.0 - (update - 1.0) / nupdates
         lrnow = lr(frac)
