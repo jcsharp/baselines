@@ -153,7 +153,7 @@ def constfn(val):
 def learn(*, policy, env, nsteps, total_timesteps, ent_coef, lr, 
             vf_coef=0.5,  max_grad_norm=0.5, gamma=0.99, lam=0.95, 
             log_interval=10, nminibatches=4, noptepochs=4, cliprange=0.2,
-            save_interval=0):
+            save_interval=0, model=None):
 
     if isinstance(lr, float): lr = constfn(lr)
     else: assert callable(lr)
@@ -171,7 +171,8 @@ def learn(*, policy, env, nsteps, total_timesteps, ent_coef, lr,
     make_model = lambda : Model(policy=policy, ob_space=ob_space, ac_space=ac_space, nbatch_act=nenvs, nbatch_train=nbatch_train, 
                     nsteps=nsteps, ent_coef=ent_coef, vf_coef=vf_coef,
                     max_grad_norm=max_grad_norm)
-    model = make_model()
+    if model is None:
+        model = make_model()
     if save_interval and logger.get_dir():
         checkdir = osp.join(logger.get_dir(), 'checkpoints')
         os.makedirs(checkdir, exist_ok=True)
@@ -183,7 +184,7 @@ def learn(*, policy, env, nsteps, total_timesteps, ent_coef, lr,
     runner = Runner(env=env, model=model, nsteps=nsteps, gamma=gamma, lam=lam)
 
     epinfobuf = deque(maxlen=100)
-    tfirststart = time.time()
+    # tfirststart = time.time()
 
     nupdates = total_timesteps//nbatch
     for update in range(1, nupdates+1):
